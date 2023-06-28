@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# A script that configures a new Ubuntu machine with Nginx installation
+sudo apt-get -y update
+sudo apt-get -y install nginx
+sudo touch /var/www/html/index.html
+sudo bash -c 'cat > /var/www/html/index.html << EOF
+Hello World!
+EOF'
+sudo sed -i '/^\s*server_name _;/a \ \ \ \ \ \ \ \ location /redirect_me {\n           rewrite ^/(.*)$ https:\/\/www.youtube.com\/watch?v=QH2-TGUlwu4 permanent;\n        }' /etc/nginx/sites-enabled/default
+sudo service nginx reload
