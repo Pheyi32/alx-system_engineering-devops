@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# A script that configures a new Ubuntu machine with Nginx installation
+sudo apt-get -y update
+sudo apt-get -y install nginx
+sudo touch /var/www/html/error404.html
+sudo bash -c "cat > /var/www/html/error404.html << EOF
+Ceci n'est pas une page
+EOF"
+sudo sed -i '/^\s*server_name _;/a \ \ \ \ \ \ \ \ error_page\ 404\ /error404.html;' /etc/nginx/sites-enabled/default
+sudo service nginx reload
