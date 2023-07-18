@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
-# Fixing the issues with installation of  Nginx
+# Configures Nginx server to listen on port 80
 
-# Make changes to configuration files
-sudo sed -i 's/^\s*ipv6only=True$//' /etc/nginx/sites-enabled/default
-sudo sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
-sudo cp /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
-
-# Restart Nginx to apply changes
-sudo service nginx restart
-~                          
+# remove the default ngix configuration file
+rm /etc/nginx/sites-enabled/default
+# Configures Nginx server to listen on port 80 for all active IPv4 IPs
+ln -s /etc/nginx/sites-available/default/ etc/nginx/sites-enabled/default
+# restart nginx
+service nginx restart 
