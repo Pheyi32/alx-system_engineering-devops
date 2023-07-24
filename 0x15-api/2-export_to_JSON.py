@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" A Python scripts that exports a to-do list information for a given employee ID to JSON format."""
+""" A Python scripts for a given employee ID to JSON format."""
 import json
 import requests
 import sys
