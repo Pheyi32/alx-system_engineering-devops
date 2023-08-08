@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""A recursive function to query a list of all hot posts on a given Reddit subreddit."""
+"""A recursive function to query a list of all hot posts 
+on a given Reddit subreddit."""
 import requests
 
 
