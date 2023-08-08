@@ -1,44 +1,37 @@
-#!/usr/bin/python3
-"""A recursive function to count words in all hot posts of a given Reddit subreddit."""
 import requests
 
 def count_words(subreddit, word_list, after=None, word_count={}):
-    if not subreddit or not word_list:
+    if not word_list:
         return
 
-    base_url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {"User-Agent": "100-count.py"}  # Add a user agent to avoid 429 error
-
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    params = {'limit': 100}
     if after:
-        params = {"after": after}
-    else:
-        params = {}
+        params['after'] = after
 
-    response = requests.get(base_url, headers=headers, params=params)
+    response = requests.get(url, params=params, headers={'User-Agent': 'Mozilla/5.0'})
+    data = response.json()
 
-    if response.status_code == 200:
-        data = response.json()
-        posts = data.get("data", {}).get("children", [])
+    if 'data' in data and 'children' in data['data']:
+        children = data['data']['children']
+        for child in children:
+            title = child['data']['title'].lower()
+            for word in word_list:
+                if word.lower() in title:
+                    if word in word_count:
+                        word_count[word] += 1
+                    else:
+                        word_count[word] = 1
 
-        for post in posts:
-            title = post["data"]["title"].lower()
-
-            for keyword in word_list:
-                keyword_lower = keyword.lower()
-                if keyword_lower in title:
-                    word_count[keyword_lower] = word_count.get(keyword_lower, 0) + title.count(keyword_lower)
-
-        after = data.get("data", {}).get("after")
-        if after:
-            count_words(subreddit, word_list, after, word_count)
+        if 'after' in data['data']:
+            count_words(subreddit, word_list, after=data['data']['after'], word_count=word_count)
         else:
-            sorted_word_count = sorted(word_count.items(), key=lambda x: (-x[1], x[0]))
-            for keyword, count in sorted_word_count:
-                print(f"{keyword}: {count}")
-    else:
-        print("Error: Unable to retrieve data from Reddit API")
+            sorted_words = sorted(word_count.keys(), key=lambda w: (-word_count[w], w))
+            for word in sorted_words:
+                print(f"{word}: {word_count[word]}")
 
-# Example usage
-subreddit = "programming"
-word_list = ["python", "java", "javascript"]
-count_words(subreddit, word_list)
+if __name__ == "__main__":
+    subreddit = input("Enter subreddit: ")
+    word_list = input("Enter keywords (space-separated): ").split()
+    count_words(subreddit, word_list)
+
