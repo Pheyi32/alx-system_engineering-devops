@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""A recursive function to count words in all hot posts of a given Reddit subreddit."""
+"""Function to count words in all hot posts of a given Reddit subreddit."""
 import requests
 
 
